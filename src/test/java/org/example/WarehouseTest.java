@@ -101,7 +101,7 @@ class WarehouseTest {
         void addingAProduct() {
             warehouse = Warehouse.getInstance("New warehouse");
             UUID_milk = UUID.randomUUID();
-            addedProduct = warehouse.addProduct(UUID_milk, "Milk", Category.of("Dairy"), BigDecimal.valueOf(999, 2));
+            addedProduct = warehouse.getProducts(UUID_milk, "Milk", Category.of("Dairy"), BigDecimal.valueOf(999, 2));
         }
 
         @Test
@@ -203,9 +203,11 @@ class WarehouseTest {
         @DisplayName("changing a products price should be saved")
         void changingAProductsNameShouldBeSaved() {
             warehouse.updateProductPrice(addedProducts.get(1).uuid(), BigDecimal.valueOf(311, 2));
-            assertThat(warehouse.getProductById(addedProducts.get(1).uuid())).isNotEmpty()
-                    .get()
-                    .hasFieldOrPropertyWithValue("price", BigDecimal.valueOf(311, 2));
+            List<ProductRecord> list = warehouse.getProductById(addedProducts.get(1).uuid());
+            assertThat(list).isNotEmpty();
+            assertThat(list.get(0)).hasFieldOrPropertyWithValue("price", BigDecimal.valueOf(311, 2));
+            // Test ändrat eftersom andra tester väntar sig lista från getProductById
+            // Tyckte det var mer logiskt att bara returnera produkt
         }
 
         @Test
